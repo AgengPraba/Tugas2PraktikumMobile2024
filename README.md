@@ -80,5 +80,5 @@ Text("Umur: $umur tahun"),
 
 ## Screenshots
 
-![App Screenshot](form_data)
-![App Screenshot](tampil_data)
+![App Screenshot](form_data.png)
+![App Screenshot](tampil_data.png)
