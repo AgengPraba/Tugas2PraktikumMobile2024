@@ -1,23 +1,84 @@
-# Tugas Pertemuan 2
+# Proses Passing Data dari `FormData` ke `TampilData`
 
-Fork dan clone repository ini, lalu jalankan perintah 
+Dokumen ini menjelaskan cara melakukan passing data dari layar `FormData` ke layar `TampilData` dalam aplikasi Flutter. Pengguna akan mengisi **Nama**, **NIM**, dan **Tahun Lahir** pada layar `FormData`, kemudian data tersebut akan ditampilkan di layar `TampilData` menggunakan mekanisme navigasi dan pengiriman data.
+
+## 1. Mengumpulkan Data Input di `FormData`
+
+Pada widget `FormData`, pengguna mengisi tiga field yaitu `nama`, `nim`, dan `tahun`. Setiap field ini diwakili oleh objek `TextEditingController`. Setelah pengguna menekan tombol **Simpan**, data yang dimasukkan akan ditangkap.
+
+Berikut penjelasannya:
+
+```dart
+final _namaController = TextEditingController();
+final _nimController = TextEditingController();
+final _tahunController = TextEditingController();
 ```
-flutter pub get
+
+Setiap TextField dihubungkan dengan controller-nya masing-masing:
+
+```dart
+TextField(
+  controller: _namaController,
+  decoration: InputDecoration(
+    labelText: "Nama",
+  ),
+);
 ```
-Buatlah tampilan form yang berisi nama, nim, dan tahun lahir pada file `ui/form_data.dart`, lalu buatlah tampilan hasil dari input data tersebut pada file `ui/tampil_data.dart`
 
-JELASKAN PROSES PASSING DATA DARI FORM MENUJU TAMPILAN DENGAN FILE `README.md`
+Ketika pengguna menekan tombol Simpan, callback onPressed akan dijalankan untuk menangkap data dari controller:
 
-Buat tampilan semenarik mungkin untuk dilihat.
+```dart
+onPressed: () {
+  String nama = _namaController.text;
+  String nim = _nimController.text;
+  int tahun = int.parse(_tahunController.text);
 
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => TampilData(nama: nama, nim: nim, tahun: tahun),
+  ));
+}
+```
 
-Nama : ___
+Penjelasan :
 
-NIM : ___
+- Navigator.of(context).push() digunakan untuk navigasi dari FormData ke TampilData.
+- MaterialPageRoute digunakan untuk membuat route baru yang menampilkan widget TampilData.
+- Data (nama, nim, tahun) dikirim ke konstruktor TampilData.
 
-Shift Baru: ___
+## 2 Menerima Data di `TampilData`
 
-## Screenshot
-Contoh :
-![Lampiran Form](form.png)
-![Lampiran Hasil](hasil.png)
+Pada widget `TampilData`, konstruktor menerima data yang dikirim dari `FormData`:
+
+```dart
+class TampilData extends StatelessWidget {
+  final String nama;
+  final String nim;
+  final int tahun;
+
+  const TampilData({
+    Key? key,
+    required this.nama,
+    required this.nim,
+    required this.tahun,
+  }) : super(key: key);
+}
+
+```
+
+Widget `TampilData` membutuhkan tiga parameter (`nama`, `nim`, dan `tahun`). Nilai-nilai ini kemudian digunakan untuk menampilkan informasi profil pengguna.
+
+Setelah data yang diterima, program akan menghitung umur dan menampilkannya bersama dengan nama dan NIM:
+
+```
+final int umur = DateTime.now().year - tahun;
+
+Text("Nama: $nama"),
+Text("NIM: $nim"),
+Text("Umur: $umur tahun"),
+
+```
+
+## Screenshots
+
+![App Screenshot](form_data)
+![App Screenshot](tampil_data)
